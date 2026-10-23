@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Roofing Project Hub</title>
+<title>Nailed It Roofing Solutions · Project Hub</title>
 <style>
 :root{color-scheme:light}
 body{margin:0}
@@ -351,15 +351,64 @@ a.linkrow:hover{background:var(--sunken)}
   .convos{flex-direction:row;border-right:0;border-bottom:1px solid var(--line);max-height:none;overflow-x:auto}
   .convo{width:190px;flex:none;border-bottom:0;border-right:1px solid var(--line)}
 }
+
+/* branding, profile chip, inbox, settings */
+.brand{gap:4px}
+.brand b{line-height:1.25}
+.brand .bsub{font:500 11.5px var(--mono);color:var(--faint);letter-spacing:.04em}
+.logobox{width:100%;max-width:170px;margin-bottom:6px}
+.logobox:empty{display:none}
+.logobox img{max-width:100%;max-height:72px;object-fit:contain;display:block}
+.logoimg{border:0;background:none;padding:0;cursor:pointer;display:block;border-radius:6px}
+.logoadd{border:1px dashed var(--line-strong);border-radius:8px;background:none;color:var(--muted);font-weight:600;padding:14px 12px;cursor:pointer;width:100%;font-size:12.5px}
+.logoadd:hover{background:var(--sunken)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .logobox img,:root:not([data-theme="light"]) .logoprev{background:#fff;padding:6px;border-radius:8px}}
+:root[data-theme="dark"] .logobox img,:root[data-theme="dark"] .logoprev{background:#fff;padding:6px;border-radius:8px}
+.mechip{display:flex;align-items:center;gap:9px;width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);cursor:pointer;text-align:left;color:var(--fg);min-width:0}
+.mechip:hover{background:var(--sunken)}
+.mechip .av{width:28px;height:28px;font-size:12px}
+.mechip .mt{display:flex;flex-direction:column;min-width:0}
+.mechip .mt b{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mechip .mt span{font-size:11.5px;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nbadge{margin-left:auto;background:var(--accent);color:var(--accent-fg);border-radius:10px;font-size:11px;font-weight:700;padding:0 6px;min-width:18px;text-align:center;line-height:18px}
+.inbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.inbox{list-style:none;margin:0;padding:0}
+.inbox li{display:flex;gap:12px;padding:12px 16px;border-top:1px solid var(--line);align-items:flex-start;position:relative}
+.inbox li:first-child{border-top:0}
+.inbox li.unread{background:var(--accent-soft)}
+.inbox li.unread::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+.inbox .ib{min-width:0;flex:1}
+.mentions{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.mchip{border:1px solid var(--line-strong);background:var(--surface);color:var(--accent);border-radius:12px;padding:2px 9px;font-size:12px;font-weight:600;cursor:pointer}
+.mchip:hover{background:var(--accent-soft)}
+.postas{font-size:12.5px;color:var(--muted);align-self:center}
+.mrow{border-top:1px solid var(--line);padding:12px 0;display:flex;flex-direction:column;gap:8px}
+.mrow .g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.mrow label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted);font-weight:600}
+.mrow label.inl{flex-direction:row;font-weight:400}
+.mrow .srow1 .av{width:30px;height:30px}
+.tog{display:flex;gap:10px;align-items:flex-start;padding:6px 0;font-size:13.5px;cursor:pointer}
+.tog input{width:18px;height:18px;margin-top:2px;flex:none}
+.logoprev{max-width:180px;max-height:90px;object-fit:contain;display:block;margin-bottom:8px}
+.psec textarea.list{width:100%;min-height:84px}
+.psec .composer>label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted);font-weight:600}
+#login .sub{margin:-8px 0 0;font:500 12px var(--mono);color:var(--faint);letter-spacing:.04em}
+@media (max-width:860px){.mechip{width:auto}.logobox{max-width:120px}}
 </style>
 </head>
 <body>
 <div class="app">
   <aside class="side">
-    <div class="brand"><b>Roofing Project Hub</b><span class="sync"><i class="dot" id="dot"></i><span id="syncmsg">Connecting…</span></span></div>
+    <div class="brand">
+      <div class="logobox" id="logobox"></div>
+      <b id="bname">Nailed It Roofing Solutions</b>
+      <span class="bsub" id="bsub">Project Hub</span>
+    </div>
     <nav class="nav" id="nav" aria-label="Views"></nav>
     <div class="sidefoot">
       <button class="btn primary" type="button" data-new>New project</button>
+      <button class="mechip" type="button" id="mechip" data-profile hidden aria-label="Edit your profile"></button>
+      <button class="btn" type="button" id="btn-settings" data-settings hidden>Settings</button>
       <button class="btn" type="button" data-signout>Sign out</button>
     </div>
   </aside>
@@ -371,7 +420,7 @@ a.linkrow:hover{background:var(--sunken)}
       </div>
       <div class="filters">
         <label>Field lead
-          <select id="f-lead"><option>All</option><option>Jeff</option><option>Ryan</option><option>Jose</option></select>
+          <select id="f-lead"><option>All</option></select>
         </label>
         <label>Client
           <select id="f-client"><option>All</option></select>
@@ -398,11 +447,13 @@ a.linkrow:hover{background:var(--sunken)}
   </aside>
 </div>
 <div id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="logofile" accept="image/*" hidden>
 
 <div id="login" hidden>
   <form class="lcard" id="loginform" novalidate>
-    <h1>Roofing Project Hub</h1>
-    <p class="hint" id="loginhint">Sign in with the email and password Linda set up for you.</p>
+    <h1>Nailed It Roofing Solutions</h1>
+    <p class="sub">Project Hub</p>
+    <p class="hint" id="loginhint">Sign in with the email and password your administrator set up for you.</p>
     <label>Email<input type="text" id="lg-email" inputmode="email" autocomplete="username"></label>
     <label>Password<input type="password" id="lg-pass" autocomplete="current-password"></label>
     <p class="err" id="lg-err" hidden></p>
@@ -421,12 +472,17 @@ function noop(){window.claude={use:function(){return Promise.resolve(null)}}}
 if(!window.supabase||!cfg.url||!cfg.key||/^YOUR_/.test(cfg.url)||/^YOUR_/.test(cfg.key)){
   noop();
   gate.hidden=false;
-  document.getElementById('loginform').innerHTML='<h1>Roofing Project Hub</h1><p class="hint">Setup is not finished. Open config.js and paste in your Supabase project URL and anon key.</p>';
+  document.getElementById('loginform').innerHTML='<h1>Nailed It Roofing Solutions</h1><p class="hint">Setup is not finished. Open config.js and paste in your Supabase project URL and anon key.</p>';
   return;
 }
 var sb=window.supabase.createClient(cfg.url,cfg.key);
 var resolveAuth;var authed=new Promise(function(r){resolveAuth=r});
-function ok(){gate.hidden=true;resolveAuth()}
+window.HUB_USER={email:''};
+window.HUB_AUTH={changePassword:async function(pw){var r=await sb.auth.updateUser({password:pw});if(r.error)throw r.error}};
+async function ok(){
+  try{var s=await sb.auth.getSession();window.HUB_USER.email=((s.data&&s.data.session&&s.data.session.user&&s.data.session.user.email)||'').toLowerCase()}catch(e){}
+  gate.hidden=true;resolveAuth();
+}
 
 /* The page was written against a small document store (collections of documents).
    This adapter provides the same calls on top of three Supabase tables. */
@@ -444,7 +500,7 @@ function makeDb(){
     return function(){dead=true;clearInterval(iv);sb.removeChannel(ch)};
   }
   function fail(error){var e=new Error(error.message);e.code='unavailable';throw e}
-  return {
+  var api={
     collection:function(c){return {
       doc:function(id){
         var did=id||(window.crypto&&crypto.randomUUID?crypto.randomUUID():('d'+Date.now().toString(36)+Math.random().toString(36).slice(2,8)));
@@ -463,9 +519,12 @@ function makeDb(){
       }};
     },
     doc:function(path){
-      var key=path.split('/')[1];
+      var parts=path.split('/');
+      if(parts[0]!=='settings')return api.collection(parts[0]).doc(parts[1]);
+      var key=parts[1];
       return {
         set:async function(d){var r=await sb.from('settings').upsert({key:key,data:d,updated_at:new Date().toISOString()});if(r.error)fail(r.error)},
+        get:async function(){var r=await sb.from('settings').select('data').eq('key',key).maybeSingle();if(r.error)fail(r.error);var d=r.data?r.data.data:undefined;return {exists:d!==undefined,data:function(){return d}}},
         onSnapshot:function(cb,onErr){
           return watch('settings',async function(changed){
             var r=await sb.from('settings').select('data').eq('key',key).maybeSingle();
@@ -478,6 +537,7 @@ function makeDb(){
       };
     }
   };
+  return api;
 }
 var db=makeDb();
 window.claude={use:async function(n){
@@ -498,7 +558,7 @@ document.getElementById('loginform').addEventListener('submit',async function(e)
   var b=document.getElementById('lg-btn');b.disabled=true;
   var r=await sb.auth.signInWithPassword({email:email,password:pw});
   b.disabled=false;
-  if(r.error){err.textContent='That email and password did not work. Ask Linda to check your account.';err.hidden=false;return}
+  if(r.error){err.textContent='That email and password did not work. Ask your administrator to check your account.';err.hidden=false;return}
   ok();
 });
 document.addEventListener('click',async function(e){
@@ -522,11 +582,11 @@ const DEFAULT_STAGES=[
   {id:'paid',name:'Paid',color:'green',done:true},
   {id:'complete',name:'Complete',color:'green',done:true}
 ];
-const AVC={Linda:'blue',Jeff:'orange',Ryan:'green',Jose:'purple'};
-const LEADS=['Jeff','Ryan','Jose'];
-const AUTHORS=['Linda','Jeff','Ryan','Jose'];
-const UTYPES=['Field update','Client call','Permit','Issue'];
-const PTYPES=['Repair','Reroof','Government site'];
+const AVCOL=['blue','orange','green','purple','teal','pink','red','yellow','brown'];
+let UTYPES=['Field update','Client call','Permit','Issue'];
+let PTYPES=['Repair','Reroof','Government site'];
+const DEF_APP={brand:{name:'Nailed It Roofing Solutions',sub:'Project Hub',logoV:0},perms:{stages:false,del:true,add:true,links:true},
+  ptypes:['Repair','Reroof','Government site'],utypes:['Field update','Client call','Permit','Issue'],staleDays:7,agingDays:30};
 const CHECK=[
   {k:'permitSub',t:'Permit submitted'},
   {k:'permitOk',t:'Permit approved'},
@@ -553,7 +613,8 @@ const ICONS={
   sheet:'<rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M4 9h16M4 15h16M10 9v12"/>',
   badge:'<rect x="5" y="3" width="14" height="18" rx="2"/><circle cx="12" cy="10" r="2.5"/><path d="M8.5 17c.6-2 2-3 3.5-3s2.9 1 3.5 3"/>',
   alert:'<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17v.5"/>',
-  open:'<path d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6"/>'
+  open:'<path d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6"/>',
+  inbox:'<path d="M3 13l3-8h12l3 8v6H3z"/><path d="M3 13h5l1 3h6l1-3h5"/>'
 };
 const ic=n=>'<svg class="ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+ICONS[n]+'</svg>';
 
@@ -570,17 +631,203 @@ const money=n=>n==null?'—':'$'+Math.round(n).toLocaleString('en-US');
 const rel=d=>{const n=days(d,today0);return n<=0?'Today':n===1?'Yesterday':n+' days ago'};
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $=(s,r)=>(r||document).querySelector(s);
-const mention=s=>s.replace(/@(Jeff|Ryan|Jose)\b/g,'<span class="mention">@$1</span>');
+let mre=null;
+const mention=s=>mre?s.replace(mre,'<span class="mention">@$1</span>'):s;
+const reEsc=s=>String(s).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
 const okUrl=u=>/^https?:\/\/\S+$/i.test(u||'');
 const numOrNull=v=>v===''||v==null||isNaN(Number(v))?null:Math.max(0,Number(v));
 
 /* ---------- state ---------- */
 const state={view:'home',lead:'All',client:'All',utype:'All',openId:null,confirmDel:false,editLinks:false,
   projects:[],updates:[],links:{},loaded:false,canWrite:true,db:null,
-  stages:DEFAULT_STAGES.map(s=>Object.assign({},s)),draft:null,chat:'all',postPid:null,forceBottom:false};
+  stages:DEFAULT_STAGES.map(s=>Object.assign({},s)),draft:null,chat:'all',postPid:null,forceBottom:false,
+  team:[],teamLoaded:false,me:null,app:normApp(null),logo:'',lastRead:null,readsFor:null,connBad:false};
+
+/* ---------- team, roles, branding ---------- */
+function normMember(m,i){
+  return {id:String(m.id||('m'+i)),name:String(m.name||'').trim(),email:String(m.email||'').trim().toLowerCase(),title:String(m.title||''),phone:String(m.phone||''),
+    role:['admin','member','viewer'].indexOf(m.role)>=0?m.role:'member',color:COLORS.indexOf(m.color)>=0?m.color:AVCOL[i%AVCOL.length],lead:m.lead!==false,active:m.active!==false};
+}
+function normApp(d){
+  d=d||{};
+  const D=DEF_APP;
+  const lst=(a,def,must)=>{
+    const r=Array.isArray(a)?a.map(x=>String(x).trim()).filter(Boolean):def.slice();
+    must.slice().reverse().forEach(m=>{if(r.indexOf(m)<0)r.unshift(m)});
+    return r.length?r:def.slice();
+  };
+  return {brand:Object.assign({},D.brand,d.brand||{}),perms:Object.assign({},D.perms,d.perms||{}),
+    ptypes:lst(d.ptypes,D.ptypes,[]),utypes:lst(d.utypes,D.utypes,['Field update','Issue']),
+    staleDays:Math.max(1,Math.round(Number(d.staleDays)||7)),agingDays:Math.max(1,Math.round(Number(d.agingDays)||30))};
+}
+const members=()=>state.team.filter(m=>m.active!==false);
+const memberByName=n=>state.team.find(m=>m.name===n);
+const avColor=n=>{const m=memberByName(n);return m?m.color:'gray'};
+const myName=()=>state.me?state.me.name:'';
+const isAdmin=()=>!!state.me&&state.me.role==='admin';
+const myEmail=()=>((window.HUB_USER||{}).email||'').toLowerCase();
+function can(a){
+  if(!state.me)return state.canWrite;
+  const r=state.me.role;
+  if(r==='viewer')return false;
+  if(r==='admin')return true;
+  return !!state.app.perms[a];
+}
+function leadNames(extra){
+  const s=members().filter(m=>m.lead!==false).map(m=>m.name);
+  state.projects.forEach(p=>{if(p.lead&&s.indexOf(p.lead)<0)s.push(p.lead)});
+  if(extra&&s.indexOf(extra)<0)s.push(extra);
+  return s;
+}
+function opts(list,cur,blank){
+  const l=list.slice();
+  if(cur&&l.indexOf(cur)<0)l.push(cur);
+  return (blank?'<option value=""'+(!cur?' selected':'')+'>Unassigned</option>':'')+l.map(x=>'<option'+(x===cur?' selected':'')+'>'+esc(x)+'</option>').join('');
+}
+function buildMre(){
+  const ns=state.team.map(m=>m.name).filter(Boolean).sort((a,b)=>b.length-a.length).map(n=>reEsc(esc(n)));
+  mre=ns.length?new RegExp('@('+ns.join('|')+')(?![A-Za-z0-9_])','gi'):null;
+}
+const newId=()=>'m'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const initial=n=>esc(String(n||'?').charAt(0).toUpperCase());
+const ROLE_LABEL={admin:'Admin',member:'Member',viewer:'View only'};
+function applyApp(){
+  PTYPES=state.app.ptypes;UTYPES=state.app.utypes;
+  applyBrand();
+}
+function applyBrand(){
+  const b=state.app.brand;
+  $('#bname').textContent=b.name||'Project Hub';
+  $('#bsub').textContent=b.sub||'';
+  $('#bsub').hidden=!b.sub;
+  const lb=$('#logobox');
+  const ok=state.logo&&/^data:image\//.test(state.logo);
+  if(ok)lb.innerHTML=(isAdmin()?'<button class="logoimg" type="button" data-logo title="Change logo">':'<span>')+'<img src="'+esc(state.logo)+'" alt="'+esc(b.name)+' logo">'+(isAdmin()?'</button>':'</span>');
+  else lb.innerHTML=isAdmin()?'<button class="logoadd" type="button" data-logo>Add company logo</button>':'';
+  updateBadge();
+}
+function renderSide(){
+  const me=state.me,chip=$('#mechip');
+  chip.hidden=!me;
+  if(me)chip.innerHTML='<span class="av sc-'+esc(me.color)+'" aria-hidden="true">'+initial(me.name)+'</span><span class="mt"><b>'+esc(me.name)+'</b><span>'+esc(me.title||ROLE_LABEL[me.role])+'</span></span>';
+  $('#btn-settings').hidden=!isAdmin();
+  document.querySelectorAll('.sidefoot [data-new]').forEach(b=>{b.hidden=!can('add')});
+  applyBrand();
+}
+function updateNotice(){
+  const n=$('#notice');
+  let msg='';
+  if(state.connBad)msg='Not connected to the shared hub. Check your internet and reload the page. Changes will not be saved.';
+  else if(state.me&&state.me.role==='viewer')msg='You have view-only access. Ask an admin if you need to post updates or edit jobs.';
+  n.textContent=msg;n.hidden=!msg;
+}
+function resolveMe(){
+  const em=myEmail();
+  state.me=em?(state.team.find(m=>m.email===em&&m.active!==false)||null):null;
+  state.canWrite=!(state.me&&state.me.role==='viewer');
+  renderSide();updateNotice();
+  if(state.me)watchReads();
+  maybeClaim();
+  refresh();
+}
+function watchReads(){
+  const id=state.me.id;
+  if(state.readsFor===id||!state.db)return;
+  state.readsFor=id;state.lastRead=null;
+  state.db.doc('settings/reads_'+id).onSnapshot(function(s){
+    const d=s.exists?s.data():null;
+    state.lastRead=d&&d.at?new Date(d.at):null;
+    updateBadge();
+    if(state.view==='inbox')render();
+  },function(){});
+}
+function cacheLogo(v,url){try{localStorage.setItem('hub-logo-v',String(v));localStorage.setItem('hub-logo',url||'')}catch(e){}}
+function loadLogo(){
+  const v=state.app.brand.logoV||0;
+  if(!v){state.logo='';applyBrand();return}
+  let c=null;
+  try{if(localStorage.getItem('hub-logo-v')===String(v))c=localStorage.getItem('hub-logo')}catch(e){}
+  if(c){state.logo=c;applyBrand();return}
+  if(state.logoFetch===v||!state.db)return;
+  state.logoFetch=v;
+  state.db.doc('settings/logo').get().then(function(r){
+    const u=r&&r.exists?(r.data()||{}).url:'';
+    if(u&&/^data:image\//.test(u)){state.logo=u;cacheLogo(v,u)}
+    applyBrand();
+  }).catch(function(){state.logoFetch=0});
+}
+function saveTeam(){
+  const list=state.team.map(m=>Object.assign({},m));
+  enqueue('settings/team',function(){return state.db.doc('settings/team').set({list:list})});
+}
+function saveApp(){
+  const a=JSON.parse(JSON.stringify(state.app));
+  enqueue('settings/app',function(){return state.db.doc('settings/app').set(a)});
+}
+function writeLogo(url){
+  enqueue('settings/logo',function(){return state.db.doc('settings/logo').set({url:url})});
+}
+function renameEverywhere(oldN,newN){
+  if(!oldN||oldN===newN)return;
+  state.projects.forEach(p=>{if(p.lead===oldN){p.lead=newN;const d=dehydrate(p);enqueue('projects/'+p.id,function(){return state.db.doc('projects/'+p.id).set(d)})}});
+  const re=new RegExp('@'+reEsc(oldN)+'(?![A-Za-z0-9_])','gi');
+  state.updates.forEach(u=>{
+    let ch=false;
+    if(u.author===oldN){u.author=newN;ch=true}
+    const nn=u.note.replace(re,'@'+newN);
+    if(nn!==u.note){u.note=nn;ch=true}
+    if(ch){const d={pid:u.pid,author:u.author,type:u.type,at:u.at.toISOString(),note:u.note};enqueue('updates/'+u.id,function(){return state.db.doc('updates/'+u.id).set(d)})}
+  });
+}
+
+/* ---------- inbox ---------- */
+function inboxItems(){
+  const me=state.me;
+  if(!me||!me.name)return [];
+  const re=new RegExp('@'+reEsc(me.name)+'(?![A-Za-z0-9_])','i');
+  const out=[];
+  state.updates.forEach(u=>{
+    if(u.author===me.name)return;
+    const p=byId(u.pid);
+    if(!p)return;
+    const m=re.test(u.note),mine=p.lead===me.name;
+    if(!m&&!mine)return;
+    out.push({u:u,p:p,why:m?'Mentioned you':(u.type==='Issue'?'Issue on your job':'On your job')});
+  });
+  return out.sort((a,b)=>b.u.at-a.u.at);
+}
+const readFrom=()=>state.lastRead||new Date(Date.now()-7*MS);
+function updateBadge(){
+  const n=state.me?inboxItems().filter(i=>i.u.at>readFrom()).length:0;
+  const b=$('#nb-inbox');
+  if(b){b.textContent=n>99?'99+':String(n);b.hidden=!n}
+  const br=state.app.brand;
+  document.title=(n?'('+n+') ':'')+(br.name||'Project Hub')+(br.sub?' · '+br.sub:'');
+}
+function markRead(){
+  if(!state.me||!state.db)return;
+  const at=new Date();
+  state.lastRead=at;
+  const id=state.me.id;
+  enqueue('settings/reads_'+id,function(){return state.db.doc('settings/reads_'+id).set({at:at.toISOString()})});
+  render();
+}
+function renderInbox(){
+  if(!state.me)return '<p class="emptynote">Your inbox needs your profile. Reload the page and choose your name.</p>';
+  const items=inboxItems().slice(0,100),from=readFrom();
+  const n=items.filter(i=>i.u.at>from).length;
+  return '<div class="inbar"><span class="muted">'+(n?n+' unread':'You are all caught up')+'</span>'+(n?'<button class="btn" type="button" data-markread>Mark all as read</button>':'')+'</div>'
+    +'<section class="block">'+(items.length?'<ul class="inbox">'+items.map(i=>{
+      const un=i.u.at>from;
+      return '<li class="'+(un?'unread':'')+'"><span class="av sc-'+esc(avColor(i.u.author))+'" aria-hidden="true">'+initial(i.u.author)+'</span><div class="ib">'
+        +'<div class="u-h"><b>'+esc(i.u.author)+'</b><span class="chip'+(i.why==='Issue on your job'?' warn':'')+'">'+i.why+'</span><span class="muted sm">'+rel(i.u.at)+' · '+tm(i.u.at)+'</span></div>'
+        +'<div>'+openBtn(i.p)+'</div><p class="u-n">'+mention(esc(i.u.note))+'</p></div></li>';
+    }).join('')+'</ul>'
+    :'<p class="emptynote">Nothing here yet. You will see updates that mention you with @'+esc(state.me.name)+' and new updates on jobs where you are the lead.</p>')+'</section>';
+}
 
 function hydrate(id,d){
-  const p=Object.assign({badge:false,bid:null,contract:null,invoiced:null,paid:null,sq:null,next:'',onedrive:'',gmail:'',client:'',addr:'',type:'Repair',lead:'Jeff',stage:'',job:'',name:'Untitled'},d);
+  const p=Object.assign({badge:false,bid:null,contract:null,invoiced:null,paid:null,sq:null,next:'',onedrive:'',gmail:'',client:'',addr:'',type:'Repair',lead:'',stage:'',job:'',name:'Untitled'},d);
   p.id=id;
   DATEK.forEach(k=>{p[k]=d[k]?fromIso(d[k]):null});
   p.check=Object.assign({},d.check||{});
@@ -621,7 +868,7 @@ function saveLinks(){
 
 /* ---------- derived values ---------- */
 const byId=id=>state.projects.find(p=>p.id===id);
-const special=id=>id==='__new'||id==='__stages';
+const special=id=>id==='__new'||id==='__stages'||id==='__settings'||id==='__profile'||id==='__claim';
 const cur=()=>state.openId==null||special(state.openId)?null:byId(state.openId);
 const normStage=s=>({id:String(s.id),name:String(s.name||'Stage'),color:COLORS.indexOf(s.color)>=0?s.color:'gray',inv:!!s.inv,done:!!s.done});
 const stageOf=id=>state.stages.find(s=>s.id===id)||{id:id,name:id||'No stage',color:'gray'};
@@ -640,7 +887,7 @@ function flags(p){
   if(st(p).done)return f;
   if(p.nextDue){const o=days(p.nextDue,today0);if(o>0)f.push({k:'overdue',n:o,text:'Overdue '+o+'d'})}
   const a=lastAge(p);
-  if(a>=7)f.push({k:'stale',n:a===Infinity?999:a,text:a===Infinity?'No updates':'No update '+a+'d'});
+  if(a>=state.app.staleDays)f.push({k:'stale',n:a===Infinity?999:a,text:a===Infinity?'No updates':'No update '+a+'d'});
   return f;
 }
 const sev=f=>f.reduce((m,x)=>Math.max(m,(x.k==='overdue'?1000:0)+Math.min(x.n,999)),0);
@@ -661,7 +908,6 @@ const none='<p class="emptynote">No jobs match these filters.</p>';
 const openBtn=p=>'<button class="linkbtn" type="button" data-open="'+esc(p.id)+'">'+esc(p.name)+'</button>';
 
 /* ---------- updates ---------- */
-function lastAuthor(){try{const a=localStorage.getItem('hub-author');return AUTHORS.indexOf(a)>=0?a:'Linda'}catch(e){return 'Linda'}}
 const tm=d=>d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
 const dayLabel=d=>{const n=days(d,today0);return n<=0?'Today':n===1?'Yesterday':fmt(sod(d))};
 function updItem(u,showProj){
@@ -671,7 +917,7 @@ function updItem(u,showProj){
     +'<p class="u-n">'+mention(esc(u.note))+'</p></li>';
 }
 function renderThread(list,showProj,key,small){
-  const me=lastAuthor();
+  const me=myName();
   let html='',lastDay='',prev=null;
   list.forEach(u=>{
     const dk=iso(u.at);
@@ -679,7 +925,7 @@ function renderThread(list,showProj,key,small){
     const cont=prev&&prev.author===u.author&&prev.pid===u.pid&&(u.at-prev.at)<600000;
     const p=byId(u.pid);
     html+='<div class="msg'+(u.author===me?' mine':'')+(cont?' cont':'')+(u.type==='Issue'?' issue':'')+'">'
-      +'<span class="av sc-'+(AVC[u.author]||'gray')+'" aria-hidden="true">'+esc(u.author.charAt(0))+'</span><div class="mb">'
+      +'<span class="av sc-'+esc(avColor(u.author))+'" aria-hidden="true">'+initial(u.author)+'</span><div class="mb">'
       +(cont?'':'<div class="mh"><b>'+esc(u.author)+'</b>'+(showProj&&p?openBtn(p):'')+'<span>'+tm(u.at)+'</span></div>')
       +'<div class="bubble" title="'+esc(tm(u.at))+'">'+(u.type!=='Field update'?'<span class="chip'+(u.type==='Issue'?' warn':'')+'">'+esc(u.type)+'</span> ':'')+mention(esc(u.note))+'</div></div></div>';
     prev=u;
@@ -687,16 +933,17 @@ function renderThread(list,showProj,key,small){
   return '<div class="thread'+(small?' small':'')+'" data-key="'+esc(key)+'" tabindex="0" role="log" aria-label="Messages">'+(html||'<p class="emptynote">No messages yet. Write the first update below.</p>')+'</div>';
 }
 function chatComposer(pid){
-  const la=lastAuthor();
   const ps=vis();
+  const others=members().filter(m=>m.name!==myName());
   const sel=state.postPid&&ps.some(p=>p.id===state.postPid)?state.postPid:(ps[0]?ps[0].id:'');
   return '<form class="composer chatbar" data-pid="'+esc(pid||'')+'" novalidate>'
-    +'<div class="row"><label>From<select name="author">'+AUTHORS.map(a=>'<option'+(a===la?' selected':'')+'>'+a+'</option>').join('')+'</select></label>'
-    +'<label>Type<select name="type">'+UTYPES.map(a=>'<option>'+a+'</option>').join('')+'</select></label>'
+    +'<div class="row">'+(state.me?'<div class="postas">Posting as <b>'+esc(state.me.name)+'</b><input type="hidden" name="author" value="'+esc(state.me.name)+'"></div>':'<label>From<select name="author">'+members().map(m=>'<option>'+esc(m.name)+'</option>').join('')+'</select></label>')
+    +'<label>Type<select name="type">'+UTYPES.map(a=>'<option>'+esc(a)+'</option>').join('')+'</select></label>'
     +(pid?'':'<label>Project<select name="pid">'+ps.map(p=>'<option value="'+esc(p.id)+'"'+(p.id===sel?' selected':'')+'>'+esc((p.job?p.job+' · ':'')+p.name)+'</option>').join('')+'</select></label>')
     +'</div><p class="hint err" data-err hidden></p>'
-    +'<div class="row"><textarea name="note" rows="2" data-fk="note" placeholder="Write an update. Use @Jeff, @Ryan or @Jose to ask someone a question. Enter sends, Shift+Enter adds a line."></textarea>'
-    +'<button class="btn primary" type="submit">Send</button></div></form>';
+    +'<div class="row"><textarea name="note" rows="2" data-fk="note" placeholder="Write an update. Type @ and a name to ask a teammate a question. Enter sends, Shift+Enter adds a line."></textarea>'
+    +'<button class="btn primary" type="submit">Send</button></div>'
+    +(others.length?'<div class="mentions"><span class="hint">Ask:</span>'+others.map(m=>'<button class="mchip" type="button" data-ment="'+esc(m.name)+'">@'+esc(m.name)+'</button>').join('')+'</div>':'')+'</form>';
 }
 function setHtml(root,html){
   const t=$('.thread',root);
@@ -713,10 +960,10 @@ function setHtml(root,html){
 function attBlock(ps){
   const rows=ps.map(p=>({p:p,f:flags(p)})).filter(x=>x.f.length).sort((a,b)=>sev(b.f)-sev(a.f));
   return '<section class="block"><header class="bh"><h2>'+ic('alert')+'Needs attention <span class="count">'+rows.length+'</span></h2>'
-    +'<p class="cap">Next step overdue, or no update in 7+ days</p></header>'
+    +'<p class="cap">Next step overdue, or no update in '+state.app.staleDays+'+ days</p></header>'
     +(rows.length?'<ul class="rows">'+rows.map(x=>{const p=x.p;
       return '<li><div class="grow"><div><span class="mono muted sm">'+esc(p.job)+'</span> '+openBtn(p)+'</div>'
-        +'<div class="muted sm">'+esc(p.lead)+' · '+esc(p.next||'No next step set')+'</div></div>'
+        +'<div class="muted sm">'+esc(p.lead||'Unassigned')+' · '+esc(p.next||'No next step set')+'</div></div>'
         +'<div class="chips">'+pill(p.stage)+x.f.map(f=>'<span class="chip warn">'+f.text+'</span>').join('')+'</div></li>'}).join('')+'</ul>'
       :'<p class="emptynote">Nothing needs attention right now.</p>')
     +'</section>';
@@ -738,7 +985,7 @@ function invFoot(q){
 function ageCell(p){
   if(!p.invoiceSent)return '—';
   const a=days(p.invoiceSent,today0);
-  return '<span class="mono">'+a+'d</span>'+(a>30?' <span class="chip warn">30+ days</span>':'');
+  return '<span class="mono">'+a+'d</span>'+(a>state.app.agingDays?' <span class="chip warn">'+state.app.agingDays+'+ days</span>':'');
 }
 function invRows(q,full){
   return q.map(p=>{
@@ -766,10 +1013,10 @@ function linksBlock(){
         ?'<a class="linkrow" href="'+esc(u)+'" target="_blank" rel="noopener noreferrer">'+ic(i[1])+'<span><b>'+i[2]+'</b><span class="muted sm sub">'+i[3]+'</span></span></a>'
         :'<div class="linkrow">'+ic(i[1])+'<span><b>'+i[2]+'</b><span class="muted sm sub">Not set yet</span></span></div>';
     }).join('')
-    +'<button class="btn" type="button" data-linksedit>Edit links</button></div></section>';
+    +(can('links')?'<button class="btn" type="button" data-linksedit>Edit links</button>':'')+'</div></section>';
 }
 function heroEmpty(){
-  return '<div class="hero"><h2>No projects yet</h2><p>Add your first job to start tracking it from bid to final payment. Updates from Jeff, Ryan and Jose will collect under each project.</p><button class="btn primary" type="button" data-new>New project</button></div>';
+  return '<div class="hero"><h2>No projects yet</h2><p>Add your first job to start tracking it from bid to final payment. Updates from your team will collect under each project.</p>'+(can('add')?'<button class="btn primary" type="button" data-new>New project</button>':'')+'</div>';
 }
 function renderHome(){
   const ps=vis();
@@ -788,13 +1035,13 @@ function card(p){
   return '<article class="card" draggable="true" data-id="'+esc(p.id)+'">'
     +'<div class="card-top"><span class="mono job">'+esc(p.job)+'</span>'+(p.badge?'<span class="tag">'+ic('badge')+'Badge</span>':'')+'</div>'
     +'<div class="card-title">'+esc(p.name)+'</div><div class="muted sm">'+esc(p.client)+'</div>'
-    +'<div class="card-meta"><span>'+esc(p.lead)+'</span><span class="mono">'+money(value(p))+'</span></div>'
+    +'<div class="card-meta"><span>'+esc(p.lead||'Unassigned')+'</span><span class="mono">'+money(value(p))+'</span></div>'
     +(p.next?'<div class="card-next">'+esc(p.next)+'</div><div>'+dueChip(p)+'</div>':'')
     +'<button class="card-open" type="button" data-open="'+esc(p.id)+'" aria-label="Open '+esc((p.job+' '+p.name).trim())+'">'+ic('open')+'</button></article>';
 }
 function renderBoard(){
   const ps=vis();
-  return '<div class="boardbar"><button class="btn" type="button" data-stages>Customize stages</button></div><div class="board">'+state.stages.map(s=>{
+  return '<div class="boardbar">'+(can('stages')?'<button class="btn" type="button" data-stages>Customize stages</button>':'')+'</div><div class="board">'+state.stages.map(s=>{
     const list=ps.filter(p=>p.stage===s.id).sort(byDue);
     const val=list.reduce((a,p)=>a+(value(p)||0),0);
     return '<section class="col" data-stage="'+esc(s.id)+'" aria-label="'+esc(s.name)+' column"><div class="col-h"><span class="pill sc-'+esc(s.color)+'">'+esc(s.name)+'</span><span class="col-v">'+list.length+' · '+money(val)+'</span></div>'
@@ -804,7 +1051,7 @@ function renderBoard(){
 function renderActive(){
   const ps=vis().filter(p=>!st(p).done).sort((a,b)=>stIdx(a)-stIdx(b)||byDue(a,b));
   const rows=ps.map(p=>'<tr><td class="mono">'+esc(p.job)+'</td><td>'+openBtn(p)+(p.badge?' <span class="tag">'+ic('badge')+'Badge</span>':'')+'</td>'
-    +'<td>'+esc(p.client)+'</td><td>'+pill(p.stage)+'</td><td>'+esc(p.lead)+'</td><td>'+esc(p.next||'—')+'</td><td>'+(dueChip(p)||'—')+'</td><td class="num mono">'+money(value(p))+'</td></tr>').join('');
+    +'<td>'+esc(p.client)+'</td><td>'+pill(p.stage)+'</td><td>'+esc(p.lead||'Unassigned')+'</td><td>'+esc(p.next||'—')+'</td><td>'+(dueChip(p)||'—')+'</td><td class="num mono">'+money(value(p))+'</td></tr>').join('');
   return '<div class="block">'+(ps.length?tbl([['Job'],['Project'],['Client'],['Stage'],['Lead'],['Next step'],['Due'],['Value','num']],rows,920):none)+'</div>';
 }
 function renderInvoicing(){
@@ -813,7 +1060,7 @@ function renderInvoicing(){
 }
 function renderDone(){
   const ps=vis().filter(p=>st(p).done).sort((a,b)=>(b.end?b.end.getTime():0)-(a.end?a.end.getTime():0));
-  const rows=ps.map(p=>'<tr><td class="mono">'+esc(p.job)+'</td><td>'+openBtn(p)+'</td><td>'+esc(p.client)+'</td><td>'+esc(p.type)+'</td><td>'+esc(p.lead)+'</td>'
+  const rows=ps.map(p=>'<tr><td class="mono">'+esc(p.job)+'</td><td>'+openBtn(p)+'</td><td>'+esc(p.client)+'</td><td>'+esc(p.type)+'</td><td>'+esc(p.lead||'Unassigned')+'</td>'
     +'<td>'+fmt(p.end)+'</td><td class="num mono">'+money(p.contract)+'</td><td class="num mono">'+money(p.paid)+'</td><td>'+pill(p.stage)+'</td></tr>').join('');
   return '<div class="block">'+(ps.length?tbl([['Job'],['Project'],['Client'],['Type'],['Lead'],['Completed'],['Contract','num'],['Paid','num'],['Stage']],rows,960):none)+'</div>';
 }
@@ -839,13 +1086,14 @@ const VIEWS={
   active:{title:'Active jobs',cap:'Everything not in a finished stage',fn:renderActive,icon:'table',label:'Active jobs'},
   invoicing:{title:'Invoicing queue',cap:'Jobs in your invoicing stages',fn:renderInvoicing,icon:'bill',label:'Invoicing queue'},
   done:{title:'Completed jobs',cap:'Jobs in finished stages, your project log',fn:renderDone,icon:'done',label:'Completed'},
+  inbox:{title:'Inbox',cap:'Updates that mention you or land on your jobs',fn:renderInbox,icon:'inbox',label:'Inbox'},
   updates:{title:'Updates',cap:'Notes from the field and the office, newest at the bottom',fn:renderUpdates,icon:'chat',label:'Updates'}
 };
-const NAV=[[null,['home']],['Projects',['board','active','invoicing','done']],['Communication',['updates']]];
+const NAV=[[null,['home']],['Projects',['board','active','invoicing','done']],['Communication',['inbox','updates']]];
 
 const content=$('#content');
 function buildNav(){
-  $('#nav').innerHTML=NAV.map(g=>(g[0]?'<h2>'+g[0]+'</h2>':'')+g[1].map(k=>'<button class="navbtn" type="button" data-nav="'+k+'">'+ic(VIEWS[k].icon)+VIEWS[k].label+'</button>').join('')).join('');
+  $('#nav').innerHTML=NAV.map(g=>(g[0]?'<h2>'+g[0]+'</h2>':'')+g[1].map(k=>'<button class="navbtn" type="button" data-nav="'+k+'">'+ic(VIEWS[k].icon)+VIEWS[k].label+(k==='inbox'?'<span class="nbadge" id="nb-inbox" hidden></span>':'')+'</button>').join('')).join('');
 }
 function lock(root){
   if(state.canWrite&&state.db)return;
@@ -860,10 +1108,11 @@ function render(){
   $('#h1').textContent=v.title;
   $('#cap').textContent=v.cap;
   if(!state.loaded)content.innerHTML='<p class="emptynote">Loading the hub…</p>';
-  else if(!state.projects.length&&state.view!=='updates')content.innerHTML=heroEmpty();
+  else if(!state.projects.length&&state.view!=='updates'&&state.view!=='inbox')content.innerHTML=heroEmpty();
   else setHtml(content,v.fn());
   if(nv){const ta1=content.querySelector('textarea[name="note"]');if(ta1)ta1.value=nv}
   lock(content);
+  updateBadge();
   document.querySelectorAll('.navbtn').forEach(b=>b.setAttribute('aria-current',b.dataset.nav===state.view?'page':'false'));
   if(fk){const el=content.querySelector('[data-fk="'+fk+'"]');if(el)el.focus()}
 }
@@ -872,13 +1121,13 @@ function fillClients(){
   if(state.client!=='All'&&cs.indexOf(state.client)<0)state.client='All';
   $('#f-client').innerHTML='<option>All</option>'+cs.map(c=>'<option>'+esc(c)+'</option>').join('');
   $('#f-client').value=state.client;
+  const ls=leadNames();
+  if(state.lead!=='All'&&ls.indexOf(state.lead)<0)state.lead='All';
+  $('#f-lead').innerHTML='<option>All</option>'+ls.map(l=>'<option>'+esc(l)+'</option>').join('');
   $('#f-lead').value=state.lead;
   $('#clients').innerHTML=cs.map(c=>'<option value="'+esc(c)+'">').join('');
 }
-function setSync(kind,msg){
-  $('#dot').className='dot '+kind;
-  $('#syncmsg').textContent=msg;
-}
+function setSync(kind){state.connBad=kind==='bad';updateNotice()}
 function refresh(){
   fillClients();
   render();
@@ -916,8 +1165,8 @@ function renderPanel(fk){
     +'<label class="prop"><span class="k">Job #</span><input type="text" data-f="job" value="'+esc(p.job)+'"></label>'
     +'<label class="prop"><span class="k">Client</span><input type="text" list="clients" data-f="client" value="'+esc(p.client)+'"></label>'
     +'<label class="prop"><span class="k">Site address</span><input type="text" data-f="addr" value="'+esc(p.addr)+'"></label>'
-    +'<label class="prop"><span class="k">Project type</span><select data-f="type">'+PTYPES.map(s=>'<option'+(s===p.type?' selected':'')+'>'+s+'</option>').join('')+'</select></label>'
-    +'<label class="prop"><span class="k">Field lead</span><select data-f="lead">'+LEADS.map(s=>'<option'+(s===p.lead?' selected':'')+'>'+s+'</option>').join('')+'</select></label>'
+    +'<label class="prop"><span class="k">Project type</span><select data-f="type">'+opts(PTYPES,p.type)+'</select></label>'
+    +'<label class="prop"><span class="k">Field lead</span><select data-f="lead">'+opts(leadNames(p.lead),p.lead,true)+'</select></label>'
     +'<label class="prop"><span class="k">Badge required</span><input type="checkbox" data-f="badge" data-fk="badge"'+(p.badge?' checked':'')+'></label>'
     +'<label class="prop"><span class="k">Roof size (squares)</span><input type="number" min="0" step="1" inputmode="numeric" data-f="sq" value="'+(p.sq==null?'':p.sq)+'"></label>'
     +'<p class="hint">1 square = 100 sq ft</p></section>'
@@ -937,10 +1186,10 @@ function renderPanel(fk){
     +'<section class="psec"><h3>Checklist · <span id="chkcount">'+done+' of '+items.length+'</span></h3><ul class="check">'
     +items.map(c=>'<li><label><input type="checkbox" data-chk="'+c.k+'"'+(p.check[c.k]?' checked':'')+'> '+c.t+'</label></li>').join('')+'</ul></section>'
     +'<section class="psec inpanel"><h3>Updates</h3>'+renderThread(ups.slice().reverse(),false,'p-'+p.id,true)+chatComposer(p.id)+'</section>'
-    +'<section class="psec"><h3>Remove</h3>'
+    +(can('del')?'<section class="psec"><h3>Remove</h3>'
     +(state.confirmDel
       ?'<div class="delrow"><span>Delete this project and its '+ups.length+' update'+(ups.length===1?'':'s')+'?</span><button class="btn danger" type="button" data-delyes>Delete</button><button class="btn" type="button" data-delno>Keep</button></div>'
-      :'<button class="btn danger" type="button" data-delask>Delete project</button>')+'</section>');
+      :'<button class="btn danger" type="button" data-delask>Delete project</button>')+'</section>':''));
   if(pnv){const pt2=$('#pbody textarea[name="note"]');if(pt2)pt2.value=pnv}
   lock($('#pbody'));
   if(fk){const el=$('#pbody [data-fk="'+fk+'"]');if(el)el.focus()}
@@ -952,8 +1201,8 @@ function renderNew(){
     +'<label>Project name<input type="text" id="np-name" name="name" placeholder="Bayfront Plaza Reroof"></label>'
     +'<div class="crow"><label>Job #<input type="text" name="job" id="np-job"></label><label>Client<input type="text" name="client" id="np-client" list="clients"></label></div>'
     +'<label>Site address<input type="text" name="addr" id="np-addr"></label>'
-    +'<div class="crow"><label>Project type<select name="type" id="np-type">'+PTYPES.map(s=>'<option>'+s+'</option>').join('')+'</select></label>'
-    +'<label>Field lead<select name="lead" id="np-lead">'+LEADS.map(s=>'<option>'+s+'</option>').join('')+'</select></label></div>'
+    +'<div class="crow"><label>Project type<select name="type" id="np-type">'+PTYPES.map(s=>'<option>'+esc(s)+'</option>').join('')+'</select></label>'
+    +'<label>Field lead<select name="lead" id="np-lead"><option value="">Unassigned</option>'+leadNames().map(s=>'<option'+(state.me&&s===state.me.name?' selected':'')+'>'+esc(s)+'</option>').join('')+'</select></label></div>'
     +'<div class="crow"><label>Stage<select name="stage" id="np-stage">'+state.stages.map(s=>'<option value="'+esc(s.id)+'">'+esc(s.name)+'</option>').join('')+'</select></label>'
     +'<label>Roof size (squares)<input type="number" min="0" inputmode="numeric" name="sq" id="np-sq"></label>'
     +'<label>Bid amount<input type="number" min="0" step="100" inputmode="numeric" name="bid" id="np-bid"></label></div>'
@@ -978,7 +1227,208 @@ function renderStages(){
     +'<div class="crow" style="margin-top:14px"><button class="btn" type="button" data-stadd>Add stage</button><span class="grow"></span><button class="btn" type="button" data-stcancel>Cancel</button><button class="btn primary" type="button" data-stsave>Save stages</button></div></section>';
   lock($('#pbody'));
 }
+
+/* ---------- settings, profile, welcome ---------- */
+function swatches(attr,i,cur){
+  return '<div class="sws" role="group" aria-label="Color">'+COLORS.map(k=>'<button class="sw sc-'+k+'" type="button" data-'+attr+'="'+i+':'+k+'" aria-pressed="'+(cur===k)+'" aria-label="'+k+'"></button>').join('')+'</div>';
+}
+function memberRow(m,i){
+  return '<div class="mrow"><div class="srow1"><span class="av sc-'+esc(m.color)+'" aria-hidden="true">'+initial(m.name)+'</span>'
+    +'<input type="text" data-tm="name:'+i+'" value="'+esc(m.name)+'" aria-label="Name" placeholder="Name" maxlength="40">'
+    +'<button class="iconbtn sm" type="button" data-tmdel="'+i+'" aria-label="Remove team member">✕</button></div>'
+    +'<div class="g2"><label>Sign-in email<input type="text" inputmode="email" data-tm="email:'+i+'" value="'+esc(m.email)+'" placeholder="name@company.com"></label>'
+    +'<label>Job title<input type="text" data-tm="title:'+i+'" value="'+esc(m.title)+'" placeholder="e.g. Project manager" maxlength="40"></label>'
+    +'<label>Access<select data-tm="role:'+i+'">'+['admin','member','viewer'].map(r=>'<option value="'+r+'"'+(m.role===r?' selected':'')+'>'+ROLE_LABEL[r]+'</option>').join('')+'</select></label></div>'
+    +'<div class="srow2">'+swatches('tmcolor',i,m.color)
+    +'<label class="inl"><input type="checkbox" data-tmflag="lead:'+i+'"'+(m.lead?' checked':'')+'> Can be a field lead</label>'
+    +'<label class="inl"><input type="checkbox" data-tmflag="active:'+i+'"'+(m.active?' checked':'')+'> Active</label></div></div>';
+}
+function renderSettings(){
+  $('#pjob').textContent='Admin';
+  $('#ptitle').textContent='Settings';
+  const d=state.draft,a=d.app,b=a.brand;
+  const logo=d.logo!==undefined?d.logo:state.logo;
+  const hasLogo=logo&&/^data:image\//.test(logo);
+  const tog=(k,t)=>'<label class="tog"><input type="checkbox" data-perm="'+k+'"'+(a.perms[k]?' checked':'')+'><span>'+t+'</span></label>';
+  $('#pbody').innerHTML=
+    '<section class="psec"><h3>Company</h3><div class="composer">'
+    +'<label>Company name<input type="text" data-app="name" value="'+esc(b.name)+'" maxlength="60"></label>'
+    +'<label>Subtitle under the name<input type="text" data-app="sub" value="'+esc(b.sub)+'" maxlength="40"></label>'
+    +'<div>'+(hasLogo?'<img class="logoprev" src="'+esc(logo)+'" alt="Current logo">':'<p class="hint">No logo yet.</p>')
+    +'<div class="crow"><button class="btn" type="button" data-logo>'+(hasLogo?'Replace logo':'Upload logo')+'</button>'+(hasLogo?'<button class="btn" type="button" data-logoclear>Remove logo</button>':'')+'</div></div></div></section>'
+    +'<section class="psec"><h3>Team</h3><p class="hint">People sign in with the email you enter here. Add each person to Supabase (Authentication, Users) too. Unchecking Active keeps their history but removes them from menus.</p>'
+    +d.team.map(memberRow).join('')
+    +'<div class="crow" style="margin-top:12px"><button class="btn" type="button" data-tmadd>Add team member</button></div></section>'
+    +'<section class="psec"><h3>Access</h3><p class="hint">Admin can do everything, including this page. View only can read but not change anything. Members can post updates and edit jobs, plus whatever you allow below.</p>'
+    +tog('add','Members can add new projects')+tog('del','Members can delete projects')+tog('stages','Members can customize pipeline stages')+tog('links','Members can edit quick links')+'</section>'
+    +'<section class="psec"><h3>Lists and alerts</h3><div class="composer">'
+    +'<label>Project types (one per line)<textarea class="list" data-list="ptypes" rows="4">'+esc(a.ptypes.join('\n'))+'</textarea></label>'
+    +'<label>Update types (one per line). Field update and Issue are always kept.<textarea class="list" data-list="utypes" rows="4">'+esc(a.utypes.join('\n'))+'</textarea></label>'
+    +'<div class="crow"><label>Flag a job after this many days with no update<input type="number" min="1" inputmode="numeric" data-num="staleDays" value="'+esc(a.staleDays)+'"></label>'
+    +'<label>Flag an invoice after this many days<input type="number" min="1" inputmode="numeric" data-num="agingDays" value="'+esc(a.agingDays)+'"></label></div></div></section>'
+    +'<section class="psec"><p class="hint">Access levels are applied by this page. Anyone you create a sign-in for can technically reach the shared database, so only add people you trust.</p>'
+    +'<div class="crow"><button class="btn primary" type="button" data-setsave>Save settings</button><button class="btn" type="button" data-newcancel>Cancel</button></div></section>';
+}
+function openSettings(){
+  if(!isAdmin()){toast('Only admins can open settings.');return}
+  state.draft={team:state.team.map(m=>Object.assign({},m)),app:JSON.parse(JSON.stringify(state.app)),logo:undefined};
+  state.openId='__settings';
+  renderSettings();
+  showPanel();
+}
+function settingsInput(t){
+  const d=state.draft,ds=t.dataset;
+  if(!d||state.openId!=='__settings'||!ds)return false;
+  if(ds.tm){
+    const a=ds.tm.split(':'),m=d.team[Number(a[1])];
+    if(m){m[a[0]]=t.value;if(a[0]==='name'){const av=t.closest('.mrow').querySelector('.av');if(av)av.textContent=(t.value||'?').charAt(0).toUpperCase()}}
+    return true;
+  }
+  if(ds.tmflag){const a=ds.tmflag.split(':');d.team[Number(a[1])][a[0]]=t.checked;return true}
+  if(ds.app!=null){d.app.brand[ds.app]=t.value;return true}
+  if(ds.perm){d.app.perms[ds.perm]=t.checked;return true}
+  if(ds.list){d.app[ds.list]=t.value.split('\n');return true}
+  if(ds.num){d.app[ds.num]=t.value;return true}
+  return false;
+}
+function saveSettings(){
+  const d=state.draft;
+  const names=d.team.map(m=>m.name.trim());
+  if(names.some(n=>!n)){toast('Every team member needs a name.');return}
+  if(new Set(names.map(n=>n.toLowerCase())).size!==names.length){toast('Two team members have the same name.');return}
+  const emails=d.team.map(m=>m.email.trim().toLowerCase()).filter(Boolean);
+  if(new Set(emails).size!==emails.length){toast('Two team members share an email.');return}
+  if(emails.some(e=>!/^\S+@\S+\.\S+$/.test(e))){toast('Check the email addresses. One does not look right.');return}
+  if(!d.team.some(m=>m.role==='admin'&&m.active)){toast('Keep at least one active admin.');return}
+  const mine=state.me&&d.team.find(m=>m.id===state.me.id);
+  if(!mine||!mine.active||mine.role!=='admin'){toast('You cannot remove your own admin access here. Ask another admin.');return}
+  if(!canSave())return;
+  const list=d.team.map((m,i)=>normMember(Object.assign({},m,{name:m.name.trim(),email:m.email.trim().toLowerCase()}),i));
+  list.forEach(m=>{const o=state.team.find(x=>x.id===m.id);if(o&&o.name!==m.name)renameEverywhere(o.name,m.name)});
+  const app=normApp({brand:Object.assign({},d.app.brand),perms:d.app.perms,ptypes:d.app.ptypes,utypes:d.app.utypes,staleDays:d.app.staleDays,agingDays:d.app.agingDays});
+  app.brand.name=String(d.app.brand.name||'').trim()||DEF_APP.brand.name;
+  app.brand.sub=String(d.app.brand.sub||'').trim();
+  if(d.logo!==undefined){
+    app.brand.logoV=d.logo?Date.now():0;
+    state.logo=d.logo;cacheLogo(app.brand.logoV,d.logo);
+    if(d.logo)writeLogo(d.logo);
+  }
+  state.team=list;buildMre();saveTeam();
+  state.app=app;saveApp();applyApp();
+  closePanel();resolveMe();toast('Settings saved');
+}
+function logoPicked(url){
+  if(state.openId==='__settings'&&state.draft){state.draft.logo=url;renderSettings();return}
+  if(!isAdmin()||!canSave())return;
+  state.logo=url;
+  state.app.brand.logoV=url?Date.now():0;
+  cacheLogo(state.app.brand.logoV,url);
+  if(url)writeLogo(url);
+  saveApp();applyBrand();toast(url?'Logo updated':'Logo removed');
+}
+function processLogo(file){
+  if(!file)return;
+  if(file.size>5e6){toast('That image is too large. Use one under 5 MB.');return}
+  const r=new FileReader();
+  r.onload=function(){
+    const img=new Image();
+    img.onload=function(){
+      const w0=img.naturalWidth||img.width||300,h0=img.naturalHeight||img.height||150;
+      const sc=Math.min(1,320/Math.max(w0,h0));
+      const c=document.createElement('canvas');
+      c.width=Math.max(1,Math.round(w0*sc));c.height=Math.max(1,Math.round(h0*sc));
+      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+      let url=c.toDataURL('image/png');
+      if(url.length>150000){
+        const g=c.getContext('2d');g.globalCompositeOperation='destination-over';g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);
+        url=c.toDataURL('image/jpeg',.85);
+      }
+      logoPicked(url);
+    };
+    img.onerror=function(){toast('Could not read that image. Try a PNG or JPG.')};
+    img.src=r.result;
+  };
+  r.readAsDataURL(file);
+}
+
+function renderProfile(){
+  const d=state.draft,me=state.me;
+  $('#pjob').textContent=ROLE_LABEL[me.role];
+  $('#ptitle').textContent='Your profile';
+  $('#pbody').innerHTML='<section class="psec"><h3>About you</h3><div class="composer">'
+    +'<label>Name<input type="text" data-pf="name" value="'+esc(d.name)+'" maxlength="40"></label>'
+    +'<label>Job title<input type="text" data-pf="title" value="'+esc(d.title)+'" maxlength="40"></label>'
+    +'<label>Phone<input type="text" inputmode="tel" data-pf="phone" value="'+esc(d.phone)+'" maxlength="30"></label>'
+    +'<div><span class="hint">Color</span>'+swatches('pcolor',0,d.color)+'</div>'
+    +'<p class="hint">Signed in as '+esc(me.email||myEmail())+'. Only an admin can change your access level.</p>'
+    +'<div class="crow"><button class="btn primary" type="button" data-profsave>Save profile</button><button class="btn" type="button" data-newcancel>Cancel</button></div></div></section>'
+    +'<section class="psec"><h3>Password</h3><div class="composer">'
+    +'<label>New password<input type="password" id="pw1" autocomplete="new-password"></label>'
+    +'<label>Type it again<input type="password" id="pw2" autocomplete="new-password"></label>'
+    +'<div class="crow"><button class="btn" type="button" data-pwsave>Change password</button></div></div></section>';
+}
+function openProfile(){
+  const m=state.me;
+  if(!m)return;
+  state.draft={name:m.name,title:m.title,phone:m.phone,color:m.color};
+  state.openId='__profile';
+  renderProfile();
+  showPanel();
+}
+function saveProfile(){
+  const d=state.draft,me=state.me,name=d.name.trim();
+  if(!name){toast('Enter your name.');return}
+  if(state.team.some(x=>x.id!==me.id&&x.name.toLowerCase()===name.toLowerCase())){toast('Someone on the team already has that name.');return}
+  if(!state.db){toast('Saving is not available right now.');return}
+  const old=me.name;
+  Object.assign(me,{name:name,title:d.title.trim(),phone:d.phone.trim(),color:d.color});
+  if(old!==name)renameEverywhere(old,name);
+  buildMre();saveTeam();
+  closePanel();resolveMe();toast('Profile saved');
+}
+async function savePassword(){
+  const a=$('#pw1').value,b=$('#pw2').value;
+  if(a.length<8){toast('Use at least 8 characters.');return}
+  if(a!==b){toast('The two passwords do not match.');return}
+  try{await window.HUB_AUTH.changePassword(a);$('#pw1').value='';$('#pw2').value='';toast('Password changed')}
+  catch(e){toast('Could not change the password. Try again.')}
+}
+
+function renderClaim(){
+  const em=myEmail();
+  $('#pclose').hidden=true;
+  $('#pjob').textContent='Welcome';
+  const body=$('#pbody');
+  if(!state.team.length){
+    $('#ptitle').textContent='Set up your team';
+    body.innerHTML='<form class="composer psec" id="claimfirst" novalidate><p>Nobody has set up this hub yet. The first person to sign in becomes the administrator, so this should be you.</p>'
+      +'<label>Your name<input type="text" id="cl-name" maxlength="40" autocomplete="name"></label>'
+      +'<p class="hint">Signed in as '+esc(em)+'. Names already used on projects and updates are added to the team automatically, and you can sort out their sign-in emails in Settings.</p>'
+      +'<p class="hint err" data-err hidden></p><button class="btn primary" type="submit">Create the team</button></form>';
+    return;
+  }
+  const inactive=state.team.find(m=>m.email===em&&m.active===false);
+  if(inactive){
+    $('#ptitle').textContent='Account not active';
+    body.innerHTML='<div class="psec"><p>Your account has been switched off. Ask an administrator to turn it back on.</p></div>';
+    return;
+  }
+  const open=state.team.filter(m=>!m.email&&m.active!==false);
+  $('#ptitle').textContent='Which teammate are you?';
+  body.innerHTML='<div class="psec"><p>Your sign-in ('+esc(em)+') is not linked to a team member yet.</p>'
+    +(open.length?'<p class="hint">Pick your name:</p><div class="crow">'+open.map(m=>'<button class="btn" type="button" data-claim="'+esc(m.id)+'">I am '+esc(m.name)+'</button>').join('')+'</div>':'')
+    +'<form class="composer" id="claimnew" novalidate style="margin-top:14px"><label>'+(open.length?'Not on the list? Add yourself':'Your name')+'<input type="text" id="cl-name" maxlength="40" autocomplete="name"></label>'
+    +'<p class="hint err" data-err hidden></p><button class="btn primary" type="submit">Add me</button></form></div>';
+}
+function maybeClaim(){
+  if(!state.teamLoaded||!myEmail()||state.me||state.openId==='__claim')return;
+  state.openId='__claim';
+  renderClaim();
+  showPanel();
+  const f=$('#cl-name');if(f)f.focus();
+}
 function openStages(){
+  if(!can('stages')){toast('Ask an admin for permission to change the pipeline stages.');return}
   if(!canSave())return;
   state.draft=state.stages.map(s=>Object.assign({},s));
   state.openId='__stages';
@@ -994,6 +1444,7 @@ function saveStages(){
   enqueue('settings/stages',function(){return state.db.doc('settings/stages').set({list:list})});
   closePanel();render();toast('Stages saved');
 }
+function closePanelForce(){state.openId=null;closePanel()}
 function showPanel(){
   lastFocus=document.activeElement;
   $('#overlay').hidden=false;
@@ -1013,6 +1464,8 @@ function openNew(){
   const f=$('#np-name');if(f&&!f.disabled)f.focus();
 }
 function closePanel(){
+  if(state.openId==='__claim'&&!state.me)return;
+  $('#pclose').hidden=false;
   state.openId=null;
   state.draft=null;
   state.confirmDel=false;
@@ -1032,7 +1485,46 @@ function toast(m){
 document.addEventListener('click',e=>{
   const t=e.target;
   if(!t.closest)return;
-  if(t.closest('[data-new]')){if(canSave())openNew();return}
+  if(t.closest('[data-new]')){if(!can('add')){toast('Ask an admin for permission to add projects.');return}if(canSave())openNew();return}
+  if(t.closest('[data-settings]')){openSettings();return}
+  if(t.closest('[data-profile]')){openProfile();return}
+  if(t.closest('[data-markread]')){markRead();return}
+  let mb;
+  if((mb=t.closest('[data-ment]'))){
+    const f=mb.closest('form'),ta=f&&f.elements.note;
+    if(ta){const a=ta.selectionStart==null?ta.value.length:ta.selectionStart,pre=ta.value.slice(0,a),post=ta.value.slice(a);
+      const ins=(pre&&!/\s$/.test(pre)?' ':'')+'@'+mb.dataset.ment+' ';
+      ta.value=pre+ins+post;ta.focus();const pos=(pre+ins).length;ta.setSelectionRange(pos,pos)}
+    return;
+  }
+  if(t.closest('[data-logo]')){if(isAdmin())$('#logofile').click();return}
+  if(t.closest('[data-logoclear]')){logoPicked('');return}
+  if((mb=t.closest('[data-claim]'))){
+    const m=state.team.find(x=>x.id===mb.dataset.claim);
+    if(m&&!m.email){m.email=myEmail();saveTeam();closePanelForce();resolveMe();toast('Welcome, '+m.name)}
+    return;
+  }
+  if(state.openId==='__settings'&&state.draft){
+    const D=state.draft;
+    if(t.closest('[data-setsave]')){saveSettings();return}
+    if(t.closest('[data-tmadd]')){
+      D.team.push({id:newId(),name:'',email:'',title:'',phone:'',role:'member',color:AVCOL[D.team.length%AVCOL.length],lead:true,active:true});
+      renderSettings();
+      const ins=$('#pbody').querySelectorAll('[data-tm^="name:"]');const l=ins[ins.length-1];if(l)l.focus();
+      return;
+    }
+    if((mb=t.closest('[data-tmdel]'))){
+      const i=Number(mb.dataset.tmdel),m=D.team[i];
+      if(state.me&&m.id===state.me.id){toast('You cannot remove yourself.');return}
+      D.team.splice(i,1);renderSettings();return;
+    }
+    if((mb=t.closest('[data-tmcolor]'))){const a=mb.dataset.tmcolor.split(':');D.team[Number(a[0])].color=a[1];renderSettings();return}
+  }
+  if(state.openId==='__profile'&&state.draft){
+    if(t.closest('[data-profsave]')){saveProfile();return}
+    if(t.closest('[data-pwsave]')){savePassword();return}
+    if((mb=t.closest('[data-pcolor]'))){state.draft.color=mb.dataset.pcolor.split(':')[1];renderProfile();return}
+  }
   if(t.closest('[data-newcancel]')||t.closest('[data-stcancel]')){closePanel();return}
   if(t.closest('[data-stages]')){openStages();return}
   if(state.openId==='__stages'&&state.draft){
@@ -1076,7 +1568,7 @@ document.addEventListener('click',e=>{
 
 function deleteProject(){
   const p=cur();
-  if(!p||!canSave())return;
+  if(!p||!can('del')||!canSave())return;
   const ups=state.updates.filter(u=>u.pid===p.id);
   const id=p.id,name=p.name;
   enqueue('projects/'+id,function(){return state.db.doc('projects/'+id).delete()});
@@ -1090,20 +1582,11 @@ function deleteProject(){
 
 document.addEventListener('change',e=>{
   const t=e.target;
+  if(t.id==='logofile'){processLogo(t.files&&t.files[0]);t.value='';return}
   if(t.id==='f-lead'){state.lead=t.value;render();return}
   if(t.id==='f-client'){state.client=t.value;render();return}
   if(t.dataset.stflag&&state.draft){const a=t.dataset.stflag.split(':');state.draft[Number(a[1])][a[0]]=t.checked;return}
   if(t.name==='pid'&&t.closest('form.composer')){state.postPid=t.value;return}
-  if(t.name==='author'&&t.closest('form.composer')){
-    try{localStorage.setItem('hub-author',t.value)}catch(x){}
-    const f=t.closest('form'),note=f.elements.note.value,inPanel=$('#panel').contains(t);
-    if(inPanel)renderPanel();
-    render();
-    const root=inPanel?$('#pbody'):content;
-    const ta=root.querySelector('textarea[name="note"]');if(ta)ta.value=note;
-    const sel=root.querySelector('select[name="author"]');if(sel)sel.focus();
-    return;
-  }
   const p=cur();
   if(!p||!t.closest('#pbody'))return;
   if(t.dataset.chk){
@@ -1182,6 +1665,25 @@ document.addEventListener('submit',e=>{
     closePanel();refresh();toast('Added '+name);
     return;
   }
+  if(f.id==='claimfirst'||f.id==='claimnew'){
+    const name=$('#cl-name').value.trim(),err=f.querySelector('[data-err]'),em=myEmail();
+    if(!name){err.textContent='Enter your name.';err.hidden=false;return}
+    if(f.id==='claimnew'&&state.team.some(m=>m.name.toLowerCase()===name.toLowerCase())){err.textContent='That name is already on the list. Pick it above instead.';err.hidden=false;return}
+    if(!state.db)return;
+    if(f.id==='claimfirst'){
+      const seen={};seen[name.toLowerCase()]=1;
+      const list=[normMember({id:newId(),name:name,email:em,role:'admin'},0)];
+      const old=[];
+      state.projects.forEach(p=>{old.push(p.lead)});
+      state.updates.forEach(u=>{old.push(u.author)});
+      old.forEach(n=>{n=String(n||'').trim();if(n&&!seen[n.toLowerCase()]){seen[n.toLowerCase()]=1;list.push(normMember({id:newId(),name:n,role:'member'},list.length))}});
+      state.team=list;
+    }else{
+      state.team.push(normMember({id:newId(),name:name,email:em,role:'member'},state.team.length));
+    }
+    buildMre();saveTeam();closePanelForce();resolveMe();toast('Welcome, '+name);
+    return;
+  }
   if(!f.classList.contains('composer'))return;
   const note=f.elements.note.value.trim();
   const err=f.querySelector('[data-err]');
@@ -1235,6 +1737,8 @@ document.addEventListener('drop',e=>{
 
 document.addEventListener('input',e=>{
   const t=e.target;
+  if(t.dataset&&t.dataset.pf&&state.openId==='__profile'&&state.draft){state.draft[t.dataset.pf]=t.value;return}
+  if(settingsInput(t))return;
   if(t.dataset&&t.dataset.stname!=null&&state.draft){
     const i=Number(t.dataset.stname);state.draft[i].name=t.value;
     const pv=t.closest('.strow').querySelector('.pill');if(pv)pv.textContent=t.value||'Stage';
@@ -1263,7 +1767,7 @@ buildNav();
 fillClients();
 render();
 
-function onErr(){setSync('bad','Not connected');state.loaded=true;render()}
+function onErr(){setSync('bad');state.loaded=true;render()}
 (async function start(){
   let db=null;
   try{db=await window.claude.use('db')}catch(e){db=null}
@@ -1277,20 +1781,11 @@ function onErr(){setSync('bad','Not connected');state.loaded=true;render()}
     return;
   }
   state.db=db;
-  try{
-    const user=await window.claude.use('user');
-    if(user&&user.can&&user.can('data.write')===false){
-      state.canWrite=false;
-      const n=$('#notice');
-      n.textContent='You have view-only access. Ask Linda for Contributor access to post updates and edit jobs.';
-      n.hidden=false;
-    }
-  }catch(e){}
   let gotP=false;
   db.collection('projects').onSnapshot(function(snap){
     state.projects=snap.docs.map(d=>hydrate(d.id,d.data()));
     gotP=true;state.loaded=true;
-    setSync('ok','Saved and shared');
+    setSync('ok');
     refresh();
   },onErr);
   db.collection('updates').onSnapshot(function(snap){
@@ -1307,6 +1802,16 @@ function onErr(){setSync('bad','Not connected');state.loaded=true;render()}
     if(state.editLinks)return;
     state.links=s.exists?(s.data()||{}):{};
     if(gotP)render();
+  },function(){});
+  db.doc('settings/app').onSnapshot(function(s){
+    state.app=normApp(s.exists?s.data():null);
+    applyApp();loadLogo();refresh();
+  },function(){});
+  db.doc('settings/team').onSnapshot(function(s){
+    const d=s.exists?(s.data()||{}):{};
+    state.team=Array.isArray(d.list)?d.list.map(normMember):[];
+    state.teamLoaded=true;
+    buildMre();resolveMe();
   },function(){});
 })();
 })();
